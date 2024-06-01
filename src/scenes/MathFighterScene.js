@@ -54,18 +54,18 @@ export default class MathFighterScene extends Phaser.Scene {
     preload() {
 
         this.load.image('background', 'images/bg_layer1.png');
-        this.load.image('fight-bg', 'images/fight-bg.png');
+        this.load.image('fight-bg', 'images/physics-bg.jpeg');
         this.load.image('tile', 'images/tile.png');
         this.load.image('start-btn', 'images/start_button.png');
 
-        this.load.spritesheet('player', 'images/warrior1.png', {
+        this.load.spritesheet('player', 'images/adventurer_tilesheet.png', {
             frameWidth: 80,
-            frameHeight: 80
+            frameHeight: 110
         });
 
-        this.load.spritesheet('enemy', 'images/warrior2.png', {
+        this.load.spritesheet('enemy', 'images/zombie_tilesheet.png', {
             frameWidth: 80,
-            frameHeight: 80
+            frameHeight: 110
         });
 
         this.load.spritesheet('numbers', 'images/numbers.png', {
@@ -84,8 +84,8 @@ export default class MathFighterScene extends Phaser.Scene {
 
         this.add.image(240, 320, 'background');
 
-        const fight_bg = this.add.image(240, 160, 'fight-bg');
-        const tile = this.physics.add.staticImage(240, fight_bg.height - 40, 'tile');
+        const fight_bg = this.add.image(240, 110, 'fight-bg');
+        const tile = this.physics.add.staticImage(240,  326, 'tile');
 
         this.player = this.physics.add.sprite(
             this.gameHalfWidth - 150,
