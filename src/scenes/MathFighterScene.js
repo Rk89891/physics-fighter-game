@@ -35,7 +35,25 @@ export default class MathFighterScene extends Phaser.Scene {
         this.numberArray = [];
         this.number = 0;
 
-        this.question = [];
+        this.questions = [
+            { question: "What is the acceleration due to gravity on Earth (m/s²)?", answer: 10 },
+            { question: "What is the speed of sound in air at sea level (m/s)?", answer: 343 },
+            { question: "What is the atomic number of Hydrogen?", answer: 1 },
+            { question: "How many laws of motion did Newton formulate?", answer: 3 },
+            { question: "What is the freezing point of water in Celsius?", answer: 0 },
+            { question: "What is the boiling point of water in Celsius?", answer: 100 },
+            { question: "What is the charge of an electron (in Coulombs)?", answer: -1 },
+            { question: "How many planets are in the solar system?", answer: 8 },
+            { question: "What is the density of water (kg/m³)?", answer: 1000 },
+            { question: "How many protons are in a carbon atom?", answer: 6 },
+            { question: "What is the unit of frequency?", answer: "hertz" },
+            { question: "How many fundamental forces are there in nature?", answer: 4 },
+            { question: "What is the acceleration of a free-falling object on Earth (m/s²)?", answer: 10 },
+            { question: "What is the ideal gas constant (J/(mol·K))?", answer: 8 },
+            { question: "How many quarks are in a proton?", answer: 3 }
+        ];
+
+        this.question = undefined;
 
         this.correctAnswer = undefined;
 
@@ -85,7 +103,7 @@ export default class MathFighterScene extends Phaser.Scene {
         this.add.image(240, 320, 'background');
 
         const fight_bg = this.add.image(240, 110, 'fight-bg');
-        const tile = this.physics.add.staticImage(240,  326, 'tile');
+        const tile = this.physics.add.staticImage(240, 326, 'tile');
 
         this.player = this.physics.add.sprite(
             this.gameHalfWidth - 150,
@@ -254,12 +272,12 @@ export default class MathFighterScene extends Phaser.Scene {
 
         this.resultText = this.add.text(this.gameHalfWidth, 200, '0', {
             // @ts-ignore
-            fontSize: '32px', fill: '#000'
+            fontSize: '32px', fill: '#fff'
         });
 
         this.questionText = this.add.text(this.gameHalfWidth, 100, '0', {
             // @ts-ignore
-            fontSize: '32px', fill: '#000'
+            fontSize: '20px', fill: '#fff', wordWrap: { width: 400, useAdvancedWrap: true }
         });
 
         this.createButtons();
@@ -390,43 +408,10 @@ export default class MathFighterScene extends Phaser.Scene {
 
     generateQuestion() {
 
-        let numberA = Phaser.Math.Between(0, 50);
-        let numberB = Phaser.Math.Between(0, 50);
-        let operator = this.getOperator();
+        const selectedQuestion = Phaser.Utils.Array.GetRandom(this.questions);
+        this.question = selectedQuestion;
+        this.questionText.setText(selectedQuestion.question);
 
-        if (operator === '+') {
-            this.question[0] = `${numberA} + ${numberB}`;
-            this.question[1] = numberA + numberB;
-        }
-
-        if (operator === 'x') {
-            this.question[0] = `${numberA} x ${numberB}`;
-            this.question[1] = numberA * numberB;
-        }
-
-        if (operator === '-') {
-            if (numberB > numberA) {
-                this.question[0] = `${numberB} - ${numberA}`;
-                this.question[1] = numberB - numberA;
-            } else {
-                this.question[0] = `${numberA} - ${numberB}`;
-                this.question[1] = numberA - numberB;
-            }
-        }
-
-        if (operator === ':') {
-
-            do {
-                numberA = Phaser.Math.Between(0, 50);
-                numberB = Phaser.Math.Between(0, 50);
-            } while (!Number.isInteger(numberA / numberB))
-
-            this.question[0] = `${numberA} ÷ ${numberB}`;
-            this.question[1] = numberA / numberB;
-
-        }
-
-        this.questionText.setText(this.question[0]);
         const textHalfWidth = this.questionText.width * 0.5;
         this.questionText.setX(this.gameHalfWidth - textHalfWidth);
 
@@ -434,7 +419,10 @@ export default class MathFighterScene extends Phaser.Scene {
 
     checkAnswer() {
 
-        if (this.number == this.question[1]) {
+        const userAnswer = this.resultText.text.toLowerCase();
+        const correctAnswer = String(this.question.answer).toLowerCase();
+
+        if (userAnswer === correctAnswer) {
             this.correctAnswer = true;
             this.timer += 5;
         } else {
